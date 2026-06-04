@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 96%;
+    --card: 222 47% 10%;
+    --card-foreground: 210 40% 96%;
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 7%;
+    --secondary: 217 30% 18%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 217 30% 15%;
+    --muted-foreground: 215 20% 55%;
+    --accent: 265 89% 66%;
+    --accent-foreground: 210 40% 96%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 96%;
+    --border: 217 30% 18%;
+    --input: 217 30% 18%;
+    --ring: 217 91% 60%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(222 47% 10%);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(217 30% 25%);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(217 91% 60% / 0.5);
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl;
+    background: linear-gradient(135deg, hsl(222 47% 12% / 0.9), hsl(222 47% 10% / 0.9));
+  }
+
+  .metric-card {
+    @apply glass-card p-6 transition-all duration-300;
+    &:hover {
+      @apply border-primary/30;
+      box-shadow: 0 0 30px hsl(217 91% 60% / 0.1);
+    }
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200;
+    @apply text-muted-foreground hover:text-foreground hover:bg-secondary;
+  }
+
+  .nav-link.active {
+    @apply text-primary bg-primary/10 border border-primary/20;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border;
+  }
+
+  .table-row-hover {
+    @apply hover:bg-secondary/50 transition-colors duration-150;
+  }
+
+  .score-ring {
+    @apply inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-bold border-2;
+  }
+
+  .page-header {
+    @apply flex items-center justify-between mb-8;
+  }
+
+  .section-title {
+    @apply text-xl font-semibold text-foreground mb-1;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(217 30% 15%) 25%,
+      hsl(217 30% 22%) 50%,
+      hsl(217 30% 15%) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px hsl(217 91% 60% / 0.2);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 20px hsl(265 89% 66% / 0.2);
+  }
+
+  .pulse-dot {
+    @apply relative inline-flex;
+    &::before {
+      content: '';
+      @apply absolute inset-0 rounded-full bg-current opacity-75 animate-ping;
+    }
+  }
+}
+
+/* Recharts custom styles */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: hsl(217 30% 18%);
+}
+
+.recharts-text {
+  fill: hsl(215 20% 55%);
+  font-size: 12px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.recharts-legend-item-text {
+  color: hsl(215 20% 55%) !important;
+  font-size: 12px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: hsl(222 47% 12%) !important;
+  border: 1px solid hsl(217 30% 22%) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+.recharts-tooltip-label {
+  color: hsl(210 40% 96%) !important;
+  font-weight: 600 !important;
+}
+
+.recharts-tooltip-item {
+  color: hsl(215 20% 75%) !important;
+}
