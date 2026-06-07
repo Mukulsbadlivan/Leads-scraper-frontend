@@ -9,7 +9,10 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE = process.env.BACKEND_API_URL || "http://localhost:3000";
+const API_BASE =
+  process.env.BACKEND_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://leads-scraper-backend-x2zc.onrender.com";
 
 export async function POST(req: NextRequest) {
   try {

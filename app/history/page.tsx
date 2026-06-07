@@ -207,7 +207,7 @@ export default function HistoryPage() {
     setRetryingId(id);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/scraper/retry/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/scraper/retry/${id}`,
         { method: "POST" }
       );
       const data = await res.json();

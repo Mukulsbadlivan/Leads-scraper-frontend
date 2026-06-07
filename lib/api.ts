@@ -1,4 +1,6 @@
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001";
+// In production (Vercel), Next.js API routes are on the same origin — use relative paths.
+// In development, NEXT_PUBLIC_APP_URL points to http://localhost:3001.
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "";
 
 async function fetchApi<T>(
   endpoint: string,
