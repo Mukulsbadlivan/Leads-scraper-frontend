@@ -12,6 +12,25 @@ import { Badge } from "@/components/ui/badge";
 import { Job, PaginatedResponse } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
 
+function getValidUrl(url: string | undefined): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (
+    !trimmed ||
+    trimmed === "—" ||
+    trimmed.toLowerCase() === "n/a" ||
+    trimmed.toLowerCase() === "null" ||
+    trimmed.toLowerCase() === "undefined"
+  ) {
+    return null;
+  }
+  if (!trimmed.includes(".") && !trimmed.startsWith("http")) return null;
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+}
+
 export default function JobsPage() {
   const { country, state, city, sector } = useFilters();
   const [data, setData] = useState<PaginatedResponse<Job> | null>(null);
@@ -282,9 +301,30 @@ export default function JobsPage() {
                         )}
                       </td>
                       <td className="p-4">
-                        <Badge className={`text-xs border ${getSourceBadgeColor(job.source || "")}`}>
-                          {job.source || "Unknown"}
-                        </Badge>
+                        {(() => {
+                          const jobUrl = getValidUrl(job.jobUrl);
+                          if (jobUrl) {
+                            return (
+                              <a
+                                href={jobUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-block transition-transform hover:scale-105 active:scale-95"
+                                title="Open original job posting"
+                              >
+                                <Badge className={`text-xs border cursor-pointer hover:bg-secondary/80 flex items-center gap-1 hover:text-primary transition-colors ${getSourceBadgeColor(job.source || "")}`}>
+                                  {job.source || "Unknown"}
+                                  <ExternalLink className="w-2.5 h-2.5" />
+                                </Badge>
+                              </a>
+                            );
+                          }
+                          return (
+                            <Badge className={`text-xs border opacity-50 ${getSourceBadgeColor(job.source || "")}`} title="Job posting URL unavailable">
+                              {job.source || "Unknown"}
+                            </Badge>
+                          );
+                        })()}
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-1 text-foreground">

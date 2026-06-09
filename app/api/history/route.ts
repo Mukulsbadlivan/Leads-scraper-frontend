@@ -16,7 +16,7 @@ const BACKEND =
 export async function GET(req: NextRequest) {
   try {
     const qs = new URL(req.url).search;
-    const res = await fetch(`${BACKEND}/api/history${qs}`, {
+    const res = await fetch(`${BACKEND}/api/scraper/history${qs}`, {
       cache: "no-store",
     });
     const data = await res.json();

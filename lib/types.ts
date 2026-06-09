@@ -48,6 +48,7 @@ export interface Lead {
   icpTier?: "Hot" | "Warm" | "Cold";
   intents?: Intent[];
   source?: string;
+  jobLink?: string;
   jobTitle?: string;
   location?: string;
   companyId?: string;

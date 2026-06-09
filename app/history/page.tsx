@@ -190,9 +190,22 @@ export default function HistoryPage() {
         ...(sector && { sector }),
       });
       const res = await fetch(`/api/history?${params}`);
-      if (!res.ok) throw new Error("Failed to fetch history");
-      setData(await res.json());
+      if (!res.ok) {
+        let errMsg = `Failed to fetch history: status ${res.status}`;
+        try {
+          const errData = await res.json();
+          if (errData.error || errData.message) {
+            errMsg += ` (${errData.error || ""}: ${errData.message || ""})`;
+          }
+        } catch {
+          // Response is not JSON
+        }
+        throw new Error(errMsg);
+      }
+      const jsonData = await res.json();
+      setData(jsonData);
     } catch (e) {
+      console.error("[fetchHistory] Error loading scrape runs:", e);
       setError(e instanceof Error ? e.message : "Unknown error");
     } finally {
       setLoading(false);

@@ -12,6 +12,41 @@ import { Badge } from "@/components/ui/badge";
 import { Lead, PaginatedResponse } from "@/lib/types";
 import { formatNumber, getScoreColor, REGIONS, SECTORS } from "@/lib/utils";
 
+function getValidUrl(url: string | undefined): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (
+    !trimmed ||
+    trimmed === "—" ||
+    trimmed.toLowerCase() === "n/a" ||
+    trimmed.toLowerCase() === "null" ||
+    trimmed.toLowerCase() === "undefined"
+  ) {
+    return null;
+  }
+  if (!trimmed.includes(".") && !trimmed.startsWith("http")) return null;
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+}
+
+function getValidEmail(email: string | undefined): string | null {
+  if (!email) return null;
+  const trimmed = email.trim();
+  if (
+    !trimmed ||
+    trimmed === "—" ||
+    trimmed.toLowerCase() === "n/a" ||
+    trimmed.toLowerCase() === "null" ||
+    trimmed.toLowerCase() === "undefined"
+  ) {
+    return null;
+  }
+  if (!trimmed.includes("@")) return null;
+  return trimmed;
+}
+
 function ScoreRing({ score }: { score: number }) {
   const color = getScoreColor(score);
   return (
@@ -237,23 +272,39 @@ export default function LeadsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-col gap-1">
-                        {lead.linkedinUrl ? (
-                          <a
-                            href={lead.linkedinUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-blue-400 hover:text-blue-300 text-xs"
-                          >
-                            <ExternalLink className="w-3 h-3" />
-                            LinkedIn
-                          </a>
-                        ) : null}
-                        {lead.email ? (
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Mail className="w-3 h-3" />
-                            <span className="max-w-[120px] truncate">{lead.email}</span>
-                          </div>
-                        ) : null}
+                        {(() => {
+                          const linkedin = getValidUrl(lead.linkedinUrl || lead.linkedinProfileUrl);
+                          const email = getValidEmail(lead.email);
+
+                          if (!linkedin && !email) {
+                            return <span className="text-muted-foreground/40 text-xs">—</span>;
+                          }
+
+                          return (
+                            <>
+                              {linkedin && (
+                                <a
+                                  href={linkedin}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 text-xs font-medium transition-colors focus-visible:underline focus-visible:outline-none"
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                  LinkedIn
+                                </a>
+                              )}
+                              {email && (
+                                <a
+                                  href={`mailto:${email}`}
+                                  className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground text-xs transition-colors focus-visible:underline focus-visible:outline-none"
+                                >
+                                  <Mail className="w-3 h-3 text-primary" />
+                                  <span className="max-w-[120px] truncate" title={email}>{email}</span>
+                                </a>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     </td>
                     <td className="px-4 py-3">
@@ -288,9 +339,30 @@ export default function LeadsPage() {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant="secondary" className="text-xs">
-                        {lead.source || "—"}
-                      </Badge>
+                      {(() => {
+                        const sourceUrl = getValidUrl(lead.jobLink);
+                        if (sourceUrl) {
+                          return (
+                            <a
+                              href={sourceUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-block transition-transform hover:scale-105 active:scale-95"
+                              title={`Open original job posting on ${lead.source || "source"}`}
+                            >
+                              <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-secondary/80 flex items-center gap-1 hover:text-primary transition-colors">
+                                {lead.source || "Link"}
+                                <ExternalLink className="w-2.5 h-2.5" />
+                              </Badge>
+                            </a>
+                          );
+                        }
+                        return (
+                          <Badge variant="secondary" className="text-xs opacity-60">
+                            {lead.source || "—"}
+                          </Badge>
+                        );
+                      })()}
                     </td>
                   </tr>
                 ))
