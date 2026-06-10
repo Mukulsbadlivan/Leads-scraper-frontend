@@ -14,6 +14,8 @@ import {
   TrendingUp,
   ChevronRight,
   Activity,
+  Rocket,
+  Newspaper,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -47,6 +49,18 @@ const navItems = [
     href: "/jobs",
     icon: Briefcase,
     description: "View scraped job listings",
+  },
+  {
+    title: "Startup Intel",
+    href: "/startup",
+    icon: Rocket,
+    description: "Startup intelligence engine",
+  },
+  {
+    title: "Company News",
+    href: "/company-news",
+    icon: Newspaper,
+    description: "Events & news intelligence",
   },
   {
     title: "Reports",
